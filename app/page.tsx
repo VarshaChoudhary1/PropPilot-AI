@@ -1,4 +1,8 @@
+"use client";
+
 import LeadDemo from "./LeadDemo";
+
+const WHATSAPP_NUMBER = "918824000983";
 
 const services = [
   {
@@ -28,7 +32,6 @@ const leads = [
     requirement: "3BHK · Jaipur · ₹80L",
     score: 92,
     intent: "HIGH",
-    action: "Contact immediately",
   },
   {
     name: "Priya Mehta",
@@ -36,7 +39,6 @@ const leads = [
     requirement: "2BHK · Gurgaon · ₹60L",
     score: 68,
     intent: "MEDIUM",
-    action: "Follow up soon",
   },
   {
     name: "Aman Verma",
@@ -44,58 +46,87 @@ const leads = [
     requirement: "Property search · Jaipur",
     score: 41,
     intent: "LOW",
-    action: "Nurture lead",
   },
 ];
 
 export default function Home() {
+  const openWhatsApp = () => {
+    const message =
+      "Hi AAA, I'm interested in PropPilot AI. I'd like to know more about your real estate automation system.";
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+      message
+    )}`;
+
+    window.location.href = url;
+  };
+
   return (
     <main className="min-h-screen bg-[#f4f2ec] text-[#111111]">
-
       {/* NAVIGATION */}
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
-        <a
-          href="#"
-          className="text-xl font-bold tracking-[-0.05em]"
-        >
-          AAA<span className="text-[#77736b]">.</span>
-        </a>
+<nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
+  {/* Logo */}
+  <a
+    href="#"
+    className="text-xl font-bold tracking-[-0.05em]"
+  >
+    AAA<span className="text-[#77736b]">.</span>
+  </a>
 
-        <div className="hidden items-center gap-8 text-sm md:flex">
-          <a
-            href="#services"
-            className="transition-opacity hover:opacity-50"
-          >
-            Services
-          </a>
+  {/* Desktop Navigation */}
+  <div className="hidden items-center gap-8 text-sm md:flex">
+    <a
+      href="#services"
+      className="transition-opacity hover:opacity-50"
+    >
+      Services
+    </a>
 
-          <a
-            href="#process"
-            className="transition-opacity hover:opacity-50"
-          >
-            Process
-          </a>
+    <a
+      href="#process"
+      className="transition-opacity hover:opacity-50"
+    >
+      Process
+    </a>
 
-          <a
-            href="#demo"
-            className="transition-opacity hover:opacity-50"
-          >
-            Live Demo
-          </a>
-        </div>
+    <a
+      href="#demo"
+      className="transition-opacity hover:opacity-50"
+    >
+      Live Demo
+    </a>
 
-        <a
-          href="#contact"
-          className="rounded-full bg-[#111111] px-5 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
-        >
-          Book a Demo →
-        </a>
-      </nav>
+    <a
+      href="/dashboard"
+      className="font-medium transition-opacity hover:opacity-50"
+    >
+      Dashboard →
+    </a>
+  </div>
+
+  {/* CTA */}
+  <div className="flex items-center gap-3">
+    <a
+      href="/dashboard"
+      className="rounded-full border border-[#cbc7be] bg-white/70 px-5 py-3 text-sm font-medium transition-all hover:bg-white md:hidden"
+    >
+      Dashboard →
+    </a>
+
+    <a
+      href="#contact"
+      className="rounded-full bg-[#111111] px-5 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
+    >
+      Book a Demo →
+    </a>
+  </div>
+</nav>
+
+      
 
       {/* HERO */}
       <section className="mx-auto max-w-7xl px-6 pb-20 pt-14 lg:px-10 lg:pb-28 lg:pt-20">
         <div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-
           {/* LEFT */}
           <div>
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#d5d1c8] bg-white/70 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-[#6b675f]">
@@ -135,7 +166,6 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Mini proof */}
             <div className="mt-10 flex flex-wrap gap-6 border-t border-[#d8d4cc] pt-6">
               <div>
                 <p className="text-2xl font-semibold tracking-tight">
@@ -172,13 +202,9 @@ export default function Home() {
 
           {/* PRODUCT VISUAL */}
           <div className="relative">
-
-            {/* Glow / background */}
             <div className="absolute -inset-6 rounded-[3rem] bg-[#d8d4cc]/40 blur-3xl" />
 
             <div className="relative overflow-hidden rounded-[2rem] border border-[#343432] bg-[#111111] p-3 shadow-2xl">
-
-              {/* Browser bar */}
               <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex gap-1.5">
                   <span className="h-2.5 w-2.5 rounded-full bg-[#55534e]" />
@@ -196,9 +222,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Dashboard */}
               <div className="rounded-[1.5rem] bg-[#f4f2ec] p-5 text-[#111111] sm:p-7">
-
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#77736b]">
@@ -216,14 +240,12 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Metrics */}
                 <div className="mt-6 grid grid-cols-3 gap-2">
                   <MiniMetric value="24" label="Leads" />
                   <MiniMetric value="8" label="High intent" />
                   <MiniMetric value="87" label="Avg score" />
                 </div>
 
-                {/* Lead list */}
                 <div className="mt-5 rounded-2xl bg-[#111111] p-4 text-white">
                   <div className="flex items-center justify-between">
                     <p className="text-[9px] uppercase tracking-[0.18em] text-[#77736b]">
@@ -280,7 +302,9 @@ export default function Home() {
                         <div className="mt-3 h-1 overflow-hidden rounded-full bg-[#30302e]">
                           <div
                             className="h-full rounded-full bg-white"
-                            style={{ width: `${lead.score}%` }}
+                            style={{
+                              width: `${lead.score}%`,
+                            }}
                           />
                         </div>
                       </div>
@@ -300,7 +324,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Floating card */}
             <div className="absolute -bottom-5 -left-5 hidden rounded-2xl border border-[#d5d1c8] bg-white p-4 shadow-xl sm:block">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#111111] text-xs text-white">
@@ -322,7 +345,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MARQUEE / POSITIONING */}
+      {/* MARQUEE */}
       <section className="border-y border-[#d8d4cc] bg-[#eae7df] py-5">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-3 px-6 text-center text-[10px] font-medium uppercase tracking-[0.2em] text-[#77736b] sm:justify-between lg:px-10">
           <span>Lead Capture</span>
@@ -343,7 +366,6 @@ export default function Home() {
         className="bg-[#111111] px-6 py-24 text-white lg:px-10 lg:py-32"
       >
         <div className="mx-auto max-w-7xl">
-
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-[#77736b]">
@@ -397,7 +419,6 @@ export default function Home() {
         className="bg-[#f4f2ec] px-6 py-24 lg:px-10 lg:py-32"
       >
         <div className="mx-auto max-w-7xl">
-
           <div className="mb-12 max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#d5d1c8] bg-white px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#77736b]">
               <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
@@ -429,7 +450,6 @@ export default function Home() {
         className="border-t border-[#d8d4cc] bg-white px-6 py-24 lg:px-10 lg:py-32"
       >
         <div className="mx-auto max-w-7xl">
-
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-[#77736b]">
@@ -496,10 +516,9 @@ export default function Home() {
       {/* CTA */}
       <section
         id="contact"
-        className="mx-4 mb-4 overflow-hidden rounded-[2rem] bg-[#111111] px-6 py-20 text-white sm:mx-6 lg:mx-10 lg:px-16 lg:py-28"
+        className="relative z-50 mx-4 mb-4 overflow-hidden rounded-[2rem] bg-[#111111] px-6 py-20 text-white sm:mx-6 lg:mx-10 lg:px-16 lg:py-28"
       >
         <div className="mx-auto max-w-7xl">
-
           <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-[#77736b]">
@@ -517,12 +536,13 @@ export default function Home() {
               </h2>
             </div>
 
-            <a
-              href="mailto:hello@aaa-agency.com"
-              className="inline-flex w-fit items-center rounded-full bg-white px-7 py-4 text-sm font-medium text-[#111111] transition-all hover:-translate-y-1 hover:shadow-2xl"
+            <button
+              type="button"
+              onClick={openWhatsApp}
+              className="relative z-50 inline-flex w-fit cursor-pointer items-center rounded-full bg-white px-7 py-4 text-sm font-medium text-[#111111] transition-all hover:-translate-y-1 hover:shadow-2xl"
             >
               Talk to AAA →
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -536,7 +556,7 @@ export default function Home() {
   );
 }
 
-/* ---------------- Components ---------------- */
+/* MINI METRIC */
 
 function MiniMetric({
   value,
