@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function GET() {
   try {
-    const { data, error } = await getSupabaseAdmin()
+    const { data, error } = await supabaseAdmin
       .from("leads")
       .select("*")
       .order("created_at", { ascending: false });
@@ -24,12 +24,7 @@ export async function GET() {
     console.error("Leads API error:", error);
 
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to load leads",
-      },
+      { error: "Failed to load leads" },
       { status: 500 }
     );
   }
