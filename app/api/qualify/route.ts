@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
+import { supabaseAdmin } from "../../../lib/supabaseAdmin";
 
 function getScore(enquiry: string) {
   const text = enquiry.toLowerCase();
 
   let score = 45;
 
-  // Strong buying signals
+  // Buying signals
   if (
     text.includes("buy") ||
     text.includes("purchase") ||
     text.includes("looking for") ||
-    text.includes("need")
+    text.includes("need") ||
+    text.includes("want")
   ) {
     score += 15;
   }
@@ -20,18 +22,25 @@ function getScore(enquiry: string) {
     text.includes("lakh") ||
     text.includes("lac") ||
     text.includes("crore") ||
-    text.includes("budget")
+    text.includes("cr") ||
+    text.includes("budget") ||
+    text.includes("₹")
   ) {
     score += 10;
   }
 
-  // Location/property details
+  // Location signals
   if (
     text.includes("jaipur") ||
     text.includes("delhi") ||
     text.includes("mumbai") ||
     text.includes("bangalore") ||
-    text.includes("gurgaon")
+    text.includes("gurgaon") ||
+    text.includes("pune") ||
+    text.includes("noida") ||
+    text.includes("chandigarh") ||
+    text.includes("kolkata") ||
+    text.includes("ahmedabad")
   ) {
     score += 8;
   }
@@ -74,10 +83,17 @@ function getTimeline(enquiry: string) {
 
   if (
     text.includes("3 months") ||
-    text.includes("three months") ||
-    text.includes("later")
+    text.includes("three months")
   ) {
     return "2–3 months";
+  }
+
+  if (
+    text.includes("later") ||
+    text.includes("6 months") ||
+    text.includes("six months")
+  ) {
+    return "3–6 months";
   }
 
   return "Not specified";
@@ -117,7 +133,7 @@ function extractRequirement(enquiry: string) {
     text.toLowerCase().includes(city.toLowerCase())
   );
 
-  const parts = [];
+  const parts: string[] = [];
 
   if (bhkMatch) {
     parts.push(`${bhkMatch[1]}BHK`);
@@ -128,7 +144,9 @@ function extractRequirement(enquiry: string) {
   }
 
   if (budgetMatch) {
-    parts.push(`₹${budgetMatch[1]}${budgetMatch[2].toUpperCase()}`);
+    parts.push(
+      `₹${budgetMatch[1]}${budgetMatch[2].toUpperCase()}`
+    );
   }
 
   if (parts.length === 0) {
@@ -140,11 +158,17 @@ function extractRequirement(enquiry: string) {
 
 export async function POST(req: Request) {
   try {
-    const { enquiry } = await req.json();
+    const body = await req.json();
 
-    if (!enquiry) {
+    const enquiry = body.enquiry?.toString().trim();
+    const name = body.name?.toString().trim();
+    const phone = body.phone?.toString().trim();
+
+    if (!enquiry || !name || !phone) {
       return NextResponse.json(
-        { error: "Enquiry text is required" },
+        {
+          error: "Name, WhatsApp number and enquiry are required.",
+        },
         { status: 400 }
       );
     }
@@ -159,10 +183,39 @@ export async function POST(req: Request) {
 
     if (intent === "HIGH INTENT") {
       recommendedAction =
-        "Contact this lead immediately and offer relevant properties matching their location, budget, and requirements.";
+        "Contact this lead immediately and offer relevant properties matching their location, budget and requirements.";
     } else if (intent === "MEDIUM INTENT") {
       recommendedAction =
         "Follow up soon, confirm the budget and timeline, and share suitable property options.";
+    } else {
+      recommendedAction =
+        "Nurture this lead and collect more information before prioritizing the enquiry.";
+    }
+
+    // SAVE REAL LEAD TO SUPABASE
+    const { error: supabaseError } = await supabaseAdmin
+      .from("leads")
+      .insert({
+        name,
+        phone,
+        enquiry,
+        requirement,
+        timeline,
+        lead_score: score,
+        intent,
+        recommended_action: recommendedAction,
+      });
+
+    if (supabaseError) {
+      console.error("Supabase error:", supabaseError);
+
+      return NextResponse.json(
+        {
+          error: "Lead analyzed, but could not be saved.",
+          details: supabaseError.message,
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -176,7 +229,9 @@ export async function POST(req: Request) {
     console.error("Lead qualification error:", error);
 
     return NextResponse.json(
-      { error: "Failed to process lead" },
+      {
+        error: "Failed to process lead.",
+      },
       { status: 500 }
     );
   }
