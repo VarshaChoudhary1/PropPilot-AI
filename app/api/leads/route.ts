@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "../../../lib/supabaseAdmin";
+import { getSupabaseAdmin } from "../../../../lib/supabaseAdmin";
 
 export async function GET() {
   try {
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await getsupabaseAdmin()
       .from("leads")
       .select("*")
       .order("created_at", { ascending: false });
